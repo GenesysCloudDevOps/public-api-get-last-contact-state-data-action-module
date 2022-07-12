@@ -1,0 +1,56 @@
+{
+  "name": "Get Agent Wrap-Up and Time from Conversation",
+  "integrationType": "purecloud-data-actions",
+  "actionType": "custom",
+  "config": {
+    "request": {
+      "requestUrlTemplate": "/api/v2/conversations/${input.CONVERSATION_ID}",
+      "requestType": "GET",
+      "headers": {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      "requestTemplate": "${input.rawRequest}"
+    },
+    "response": {
+      "translationMap": {
+        "WRAP_UP_NAME": "$.participants[?(@.purpose == 'agent')].wrapup.name",
+        "WRAP_UP_TIME": "$.participants[?(@.purpose == 'agent')].wrapup.endTime"
+      },
+      "translationMapDefaults": {},
+      "successTemplate": "{\n \"WRAP_UP_NAME\": ${successTemplateUtils.firstFromArray(\"${WRAP_UP_NAME}\")}, \"WRAP_UP_TIME\": ${successTemplateUtils.firstFromArray(\"${WRAP_UP_TIME}\")}\n}"
+    }
+  },
+  "contract": {
+    "input": {
+      "inputSchema": {
+        "title": "Get Wrap-Up Request",
+        "type": "object",
+        "required": [
+          "CONVERSATION_ID"
+        ],
+        "properties": {
+          "CONVERSATION_ID": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "output": {
+      "successSchema": {
+        "title": "Get Wrap-Up Response",
+        "type": "object",
+        "properties": {
+          "WRAP_UP_NAME": {
+            "type": "string"
+          },
+          "WRAP_UP_TIME": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "secure": false
+}
