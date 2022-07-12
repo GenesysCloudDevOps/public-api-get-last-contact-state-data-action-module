@@ -33,7 +33,7 @@ resource "genesyscloud_integration_action" "action" {
     }
 
     config_response {
-        success_template = "{ \"convEnd\": $${convEnd} }"
+        success_template = "{\n \"WRAP_UP_NAME\": ${successTemplateUtils.firstFromArray(\"${WRAP_UP_NAME}\")}, \"WRAP_UP_TIME\": ${successTemplateUtils.firstFromArray(\"${WRAP_UP_TIME}\")}\n}"
         translation_map = { 
             WRAP_UP_NAME = "$.participants[?(@.purpose == 'agent')].wrapup.name",
             WRAP_UP_TIME = "$.participants[?(@.purpose == 'agent')].wrapup.endTime"
